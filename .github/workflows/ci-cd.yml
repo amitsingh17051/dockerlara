@@ -63,12 +63,12 @@ jobs:
     - name: Run PHP CS Fixer
       run: |
         composer require --dev friendsofphp/php-cs-fixer
-        ./vendor/bin/php-cs-fixer fix app tests --dry-run --diff
+        ./vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff
 
     - name: Run Laravel Pint
       run: |
         composer require --dev laravel/pint
-        ./vendor/bin/pint --test app tests
+        ./vendor/bin/pint --test
 
   # Job 2: Build Docker Image
   build:
