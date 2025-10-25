@@ -1,0 +1,59 @@
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0.35
+    container_name: laravel_mysql_staging
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: laravel_staging
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: laravel_user
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_staging_data:/var/lib/mysql
+    networks:
+      - laravel_network
+
+  # Laravel Application
+  app:
+    image: ${DOCKER_IMAGE}:staging
+    container_name: laravel_app_staging
+    restart: unless-stopped
+    working_dir: /var/www/html
+    ports:
+      - "8003:80"
+    volumes:
+      - ./:/var/www/html
+    env_file:
+      - .env.staging
+    networks:
+      - laravel_network
+    depends_on:
+      - mysql
+
+  # PHPMyAdmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: laravel_phpmyadmin_staging
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: laravel_user
+      PMA_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "8084:80"
+    networks:
+      - laravel_network
+    depends_on:
+      - mysql
+
+volumes:
+  mysql_staging_data:
+    driver: local
+
+networks:
+  laravel_network:
+    driver: bridge

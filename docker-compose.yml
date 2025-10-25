@@ -1,0 +1,61 @@
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0.35
+    container_name: laravel_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: laravel_db
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_USER: laravel_user
+      MYSQL_PASSWORD: laravel_password
+    ports:
+      - "3308:3306"  # Changed to 3308 to avoid conflicts
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - laravel_network
+
+  # Laravel Application (with built-in web server)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    ports:
+      - "8002:80"  # Changed to 8002 to avoid conflicts
+    volumes:
+      - ./:/var/www/html
+    env_file:
+      - docker.env
+    networks:
+      - laravel_network
+    depends_on:
+      - mysql
+
+  # PHPMyAdmin (Database Management)
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: laravel_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306  # This stays 3306 (internal container port)
+      PMA_USER: laravel_user
+      PMA_PASSWORD: laravel_password
+    ports:
+      - "8083:80"  # Changed to 8083 to avoid conflicts
+    networks:
+      - laravel_network
+    depends_on:
+      - mysql
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  laravel_network:
+    driver: bridge
