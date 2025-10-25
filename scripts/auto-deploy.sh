@@ -1,20 +1,19 @@
 #!/bin/bash
 
 # Auto-Deployment Script for Laravel Docker App
-# This script automatically updates your Docker container with the latest image
+# This script automatically updates your Docker container with the latest code
 
 set -e
 
 echo "🚀 Starting auto-deployment..."
 
 # Configuration
-IMAGE_NAME="ghcr.io/amitsingh17051/dockerlara:latest"
 CONTAINER_NAME="laravel_app"
 COMPOSE_FILE="docker-compose.yml"
 
-# Pull latest image
-echo "📦 Pulling latest Docker image..."
-docker pull $IMAGE_NAME
+# Pull latest code from GitHub
+echo "📥 Pulling latest code from GitHub..."
+git pull origin main
 
 # Stop current container
 echo "⏹️ Stopping current container..."
@@ -24,11 +23,9 @@ docker compose -f $COMPOSE_FILE stop app
 echo "🗑️ Removing old container..."
 docker compose -f $COMPOSE_FILE rm -f app
 
-# Update docker-compose.yml to use the new image
-echo "🔄 Updating docker-compose.yml..."
-sed -i "s|build:|# build:|g" $COMPOSE_FILE
-sed -i "s|# image:|image:|g" $COMPOSE_FILE
-sed -i "s|image: laravel-app:latest|image: $IMAGE_NAME|g" $COMPOSE_FILE
+# Build new image with latest code
+echo "🔨 Building new Docker image..."
+docker compose -f $COMPOSE_FILE build app
 
 # Start new container
 echo "▶️ Starting new container..."

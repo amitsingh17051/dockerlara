@@ -50,3 +50,4 @@ docker image prune -f
 
 echo "✅ Deployment to $ENVIRONMENT completed successfully!"
 echo "🌐 Application is available at: http://localhost:$PORT"
+

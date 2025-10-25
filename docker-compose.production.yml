@@ -56,3 +56,4 @@ volumes:
 networks:
   laravel_network:
     driver: bridge
+
