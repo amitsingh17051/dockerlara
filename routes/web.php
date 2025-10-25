@@ -16,3 +16,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Test route for CI/CD pipeline
+Route::get('/test-cicd', function () {
+    return response()->json([
+        'message' => 'CI/CD Pipeline is working!',
+        'timestamp' => now(),
+        'version' => '1.0.0'
+    ]);
+});
