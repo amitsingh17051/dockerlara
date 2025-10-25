@@ -18,9 +18,10 @@ services:
 
   # Laravel Application (with built-in web server)
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    image: ghcr.io/amitsingh17051/dockerlara:latest
     container_name: laravel_app
     restart: unless-stopped
     working_dir: /var/www/html

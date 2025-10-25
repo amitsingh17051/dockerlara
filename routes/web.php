@@ -25,3 +25,22 @@ Route::get('/test-cicd', function () {
         'version' => '1.0.0',
     ]);
 });
+
+// Auto-deployment webhook endpoint
+Route::post('/deploy', function () {
+    // Simple webhook endpoint for auto-deployment
+    // In production, you'd want to add authentication and validation
+    
+    $output = [];
+    $returnCode = 0;
+    
+    // Execute the auto-deployment script
+    exec('/var/www/html/scripts/auto-deploy.sh 2>&1', $output, $returnCode);
+    
+    return response()->json([
+        'status' => $returnCode === 0 ? 'success' : 'error',
+        'message' => $returnCode === 0 ? 'Deployment completed successfully' : 'Deployment failed',
+        'output' => $output,
+        'timestamp' => now(),
+    ]);
+});
