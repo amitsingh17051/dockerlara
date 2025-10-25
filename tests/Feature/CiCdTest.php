@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class CiCdTest extends TestCase
@@ -19,12 +18,12 @@ class CiCdTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson([
             'message' => 'CI/CD Pipeline is working!',
-            'version' => '1.0.0'
+            'version' => '1.0.0',
         ]);
         $response->assertJsonStructure([
             'message',
             'timestamp',
-            'version'
+            'version',
         ]);
     }
 
