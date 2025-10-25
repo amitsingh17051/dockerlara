@@ -22,6 +22,6 @@ Route::get('/test-cicd', function () {
     return response()->json([
         'message' => 'CI/CD Pipeline is working!',
         'timestamp' => now(),
-        'version' => '1.0.0'
+        'version' => '1.0.0',
     ]);
 });
