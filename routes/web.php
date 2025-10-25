@@ -34,8 +34,8 @@ Route::post('/deploy', function () {
     $output = [];
     $returnCode = 0;
 
-    // Execute the auto-deployment script
-    exec('/var/www/html/scripts/auto-deploy.sh 2>&1', $output, $returnCode);
+    // Execute the webhook auto-deployment script
+    exec('/var/www/html/scripts/webhook-deploy.sh 2>&1', $output, $returnCode);
 
     return response()->json([
         'status' => $returnCode === 0 ? 'success' : 'error',

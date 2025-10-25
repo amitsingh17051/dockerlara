@@ -99,16 +99,18 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
-    - name: Deploy to server
+    - name: Trigger Auto-Deployment
       run: |
         echo "🚀 Starting auto-deployment..."
         echo "📦 Code: ${{ github.repository }}@${{ github.sha }}"
-        echo "✅ Auto-deployment completed!"
-        echo "🌐 Your changes are now live!"
-        echo ""
-        echo "To deploy locally, run:"
-        echo "  git pull origin main"
-        echo "  docker compose up --build -d"
+        
+        # Trigger the webhook endpoint for auto-deployment
+        curl -X POST http://localhost:8002/deploy \
+          -H "Content-Type: application/json" \
+          -d '{"trigger": "github-actions", "commit": "${{ github.sha }}"}'
+        
+        echo "✅ Auto-deployment triggered!"
+        echo "🌐 Your changes are being deployed automatically!"
 
   # Job 4: Success Message
   success:
